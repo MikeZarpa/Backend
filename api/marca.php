@@ -27,4 +27,15 @@
     }
 
     //POST crear uno nuevo
+    if(UtilesRequest::es_post()){
+        $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
+        $marca = new Marca(null, $descripcion);
+        $marca -> save();
+    }
     //PUT actualizar
+    if(UtilesRequest::es_put()){
+        $id_marca = UtilesPost::obtener('id_marca');
+        $descripcion = UtilesPost::obtener('descripcion');
+        $marca = new Marca($id_marca, $descripcion);
+        $marca -> actualizar();
+    }

@@ -4,6 +4,7 @@
     require_once (DIR_PUJOL."/clases/utiles/PaginableClass.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/utiles/FiltroClass.php");
+    require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
 
     class Marca {
         public $id_marca = null;
@@ -41,5 +42,26 @@
         public static function inicializar_desde_array($array){
             $marca = new Marca($array['id_marca'], $array['descripcion']);
             return $marca;
+        }
+
+        public function save(){
+            $descripcion = Conexion::escaparCadena($this -> descripcion);
+            $consultaSQL = "INSERT INTO marca(descripcion) VALUE ('$descripcion')";
+            $cantidad_registros_afectados = Conexion::nonQuery($consultaSQL);
+            if($cantidad_registros_afectados < 1){
+                RespuestasHttp::error_500("Error al ingresar nueva marca");
+            }
+        }
+
+        public function actualizar(){
+            $descripcion = Conexion::escaparCadena($this -> descripcion);   //Por motivos de seguridad
+            $id_marca = Conexion::escaparCadena($this -> id_marca); //Por motivos de seguridad
+            $cantidad = Conexion::nonQuery("SELECT count(*) FROM marca WHERE marca.id_marca = $id_marca");
+            if($cantidad == 1){
+                $consultaActualizacion = "UPDATE marca SET marca.descripcion = '$descripcion' WHERE marca.id_marca = $id_marca";
+                Conexion::nonQuery($consultaActualizacion);
+            } else {
+                RespuestasHttp::error_404("No se encuentra el registro a actualizar.");
+            }
         }
     }
