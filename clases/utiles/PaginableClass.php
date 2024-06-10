@@ -12,8 +12,9 @@
         public $total_elementos;    //Listo
 
         function __construct($consulta, $pagina_actual=1, $cantidad_por_pagina = 20){
+            /*
             $patron = '/SELECT .*? FROM/i';
-            $reemplazo = 'SELECT COUNT(*) as "cantidad" FROM';
+            $reemplazo = 'SELECT COUNT(*) as "cantidad" FROM';*/
 
             if($pagina_actual == null){
                 $pagina_actual = 1;
@@ -23,8 +24,9 @@
             }
 
             // Reemplazamos el patrón en la consulta
-            $nuevaConsulta = preg_replace($patron, $reemplazo, $consulta);
-            $cantidad_total = Conexion::obtenerDatos($nuevaConsulta)[0]['cantidad'];
+            //$nuevaConsulta = preg_replace($patron, $reemplazo, $consulta);
+            //var_dump($nuevaConsulta);
+            $cantidad_total = Conexion::nonQuery($consulta);
 
             $cantidad_total_paginas = ceil($cantidad_total / $cantidad_por_pagina);
             $pagina_actual = min($cantidad_total_paginas, $pagina_actual);

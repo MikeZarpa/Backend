@@ -11,7 +11,11 @@
     if ($_GET !== null) {
         $new_get = [];
         foreach ($_GET as $key => $value) {
-            $new_get[$key] = Conexion::escaparCadena($value);
+            if (gettype($value)!="array") {
+                $new_get[$key] = Conexion::escaparCadena($value);
+            } else {
+                $new_get[$key] = $value;
+            }
         }
         $_GET = $new_get;
     }
