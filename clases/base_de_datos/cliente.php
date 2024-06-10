@@ -45,8 +45,8 @@
 
             foreach ($pagina -> datos as $key => $value) {
                 $pagina -> datos[$key]['pais'] = Pais::recuperar_por_id($value['id_pais']);
-                //$pagina -> datos[$key]['direccion'] = Direccion::recuperar_por_id($value['id_direccion']);
-                //$pagina -> datos[$key]['cond_iva'] = CondicionIva::recuperar_por_id($value['id_cond_iva']);
+                $pagina -> datos[$key]['direccion'] = Direccion::recuperar_por_id($value['id_direccion']);
+                $pagina -> datos[$key]['cond_iva'] = CondicionIva::recuperar_por_id($value['id_cond_iva']);
             }
 
             return $pagina;
