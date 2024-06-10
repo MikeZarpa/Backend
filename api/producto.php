@@ -29,13 +29,28 @@
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
         $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
-        $producto = new Producto(null, $descripcion);
+        $cantidad_minima = UtilesPost::obtener_opcional('cantidad_minima');
+        $id_marca = UtilesPost::obtener_opcional('id_marca');
+        $habilitado = UtilesPost::obtener_opcional('habilitado');
+
+        $producto = new Producto(null, $descripcion, $cantidad_minima, $id_marca, $habilitado);
         $producto -> save();
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
         $id_producto = UtilesPost::obtener('id_producto');
         $descripcion = UtilesPost::obtener('descripcion');
-        $producto = new Producto($id_producto, $descripcion);
+        $cantidad_minima = UtilesPost::obtener('cantidad_minima');
+        $id_marca = UtilesPost::obtener('id_marca');
+        $habilitado = UtilesPost::obtener('habilitado');
+
+        $producto = new Producto($id_producto, $descripcion, $cantidad_minima, $id_marca, $habilitado);
         $producto -> actualizar();
+    }
+    if(UtilesRequest::es_delete()){
+        $id_producto = UtilesPost::obtener('id_producto');
+        $producto = Producto::recuperar_por_id($id_producto);
+        if($producto == null)
+            RespuestasHttp::error_404("Producto no encontrado");
+        $producto -> delete();
     }
