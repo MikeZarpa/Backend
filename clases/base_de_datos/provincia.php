@@ -5,11 +5,14 @@
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/utiles/FiltroClass.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    require_once (DIR_PUJOL. "/clases/base_de_datos/pais.php");
+
 
     class Provincia {
         public $id_provincia;
         public $descripcion;
         public $id_pais;
+        public $pais = null;
 
         public function __construct($id_provincia, $descripcion, $id_pais)
         {
@@ -36,8 +39,8 @@
             $consultaSQL = "SELECT id_provincia, descripcion, id_pais FROM provincia WHERE id_provincia = $id_provincia";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             if($resultado){
-                $pais = self::inicializar_desde_array($resultado[0]);
-                return $pais;
+                $provincia = self::inicializar_desde_array($resultado[0]);
+                return $provincia;
             } else return null;
         }
 
@@ -50,6 +53,7 @@
 
         public static function inicializar_desde_array($array){
             $provincia = new Provincia($array['id_provincia'], $array['descripcion'], $array['id_pais']);
+            $provincia -> pais = Pais::recuperar_por_id($array['id_pais']);
             return $provincia;
         }
 

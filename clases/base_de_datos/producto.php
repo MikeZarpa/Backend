@@ -55,6 +55,7 @@
         public static function inicializar_desde_array($array){
             $producto = new Producto($array['id_producto'], $array['descripcion'], $array['cantidad_minima'], $array['id_marca'], $array['habilitado']);
             $producto -> cantidad = $array['total_cantidad'] ?? null;
+            $producto -> marca = Marca::recuperar_por_id($array['id_marca']);
             return $producto;
         }
 
