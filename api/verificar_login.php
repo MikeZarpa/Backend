@@ -11,7 +11,6 @@
     header("Access-Control-Expose-Headers: Content-Type, Authorization, X-Custom-Header");
 
     if(UtilesRequest::es_post()){
-
         $password = UtilesPost::obtener("password");
         $email = UtilesPost::obtener_opcional("email");
         $username = UtilesPost::obtener_opcional("username");
@@ -20,7 +19,7 @@
         $usuario -> iniciar_sesion();
 
         echo json_encode($usuario);
-    }
-
-    RespuestasHttp::error_405();
+    } else{        
+        RespuestasHttp::error_405();
+        }
     ?>

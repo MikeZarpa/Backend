@@ -36,7 +36,6 @@
         }
 
         public function iniciar_sesion(){
-            self::ver_usuarios();
             $resultado =  Conexion::obtenerDatos("SELECT * FROM usuarios WHERE (username = '{$this -> username}' OR email = '{$this -> email}') AND password = '{$this -> password}'");
             
             if (count($resultado) > 0) {

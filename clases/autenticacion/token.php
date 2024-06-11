@@ -40,7 +40,7 @@
                     $token = $matches[1]; // Extraer el token de la expresión regular
                     return $token;
                 } else {
-                    RespuestaHttp::error_403("Error de Token.");
+                    RespuestasHttp::error_403("Error de Token.");
                 }
             } else {
                 RespuestasHttp::error_401("Falta inicio de sesión.");

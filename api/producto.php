@@ -20,7 +20,12 @@
             echo json_encode($producto);
         } else {
             //Consultar por muchos elementos
-            $resultados = Producto::consultarTodos();
+            $no_paginar = UtilesGet::obtener_opcional('no_paginar');
+            if($no_paginar == null){
+                $resultados = Producto::consultarTodos();
+            } else {
+                $resultados = Producto::consultarTodos(false);
+            }
             header('Content-Type: application/json');
             echo json_encode($resultados);
         }
@@ -48,7 +53,7 @@
         $producto -> actualizar();
     }
     if(UtilesRequest::es_delete()){
-        $id_producto = UtilesPost::obtener('id_producto');
+        $id_producto = UtilesGet::obtener('id_producto');
         $producto = Producto::recuperar_por_id($id_producto);
         if($producto == null)
             RespuestasHttp::error_404("Producto no encontrado");

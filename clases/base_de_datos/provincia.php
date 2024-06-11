@@ -26,13 +26,13 @@
             $consultaSQL = "SELECT id_provincia, descripcion, id_pais FROM provincia WHERE true ";
             //$pagina = new PaginableClass($consultaSQL, $numero_de_pagina);
             
-            $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
+            /*$numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
             $filtro = new Filtro(["provincia.descripcion"]);
             $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones());
-            
             $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
-
             return $pagina;
+            */
+            return Conexion::obtenerDatos($consultaSQL);
         }
 
         public static function recuperar_por_id($id_provincia){

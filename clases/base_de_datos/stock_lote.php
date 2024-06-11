@@ -48,14 +48,23 @@
             $consultaSQL = "SELECT stock_lote.id_stock, stock_lote.id_producto, stock_lote.cantidad, stock_lote.coste, stock_lote.fecha_vto FROM stock_lote WHERE id_stock = $id_stock";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             if($resultado){
-                $marca = self::inicializar_desde_array($resultado[0]);
-                return $marca;
+                $stock = self::inicializar_desde_array($resultado[0]);
+                $stock -> producto = Producto::recuperar_incompleto_por_id($stock -> id_producto);
+                return $stock;
+            } else return null;
+        }
+
+        public static function recuperar_sin_producto_por_id($id_stock){
+            $consultaSQL = "SELECT stock_lote.id_stock, stock_lote.id_producto, stock_lote.cantidad, stock_lote.coste, stock_lote.fecha_vto FROM stock_lote WHERE id_stock = $id_stock";
+            $resultado = Conexion::obtenerDatos($consultaSQL);
+            if($resultado){
+                $stock = self::inicializar_desde_array($resultado[0]);                
+                return $stock;
             } else return null;
         }
 
         public static function inicializar_desde_array($array){
             $stock = new StockLote($array['id_stock'], $array['id_producto'],$array['cantidad'],$array['coste'],$array['fecha_vto']);
-            $stock -> producto = Producto::recuperar_por_id($array['id_producto']);
             return $stock;
         }
         

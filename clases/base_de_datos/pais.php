@@ -21,13 +21,14 @@
             $consultaSQL = "SELECT id_pais, descripcion FROM pais WHERE true ";
             //$pagina = new PaginableClass($consultaSQL, $numero_de_pagina);
             
+            /*
             $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
             $filtro = new Filtro(["pais.descripcion"]);
             $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones());
-            
             $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
+            return $pagina;*/
+            return Conexion::obtenerDatos($consultaSQL);
 
-            return $pagina;
         }
 
         public static function recuperar_por_id($id_pais){
