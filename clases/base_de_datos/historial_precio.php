@@ -44,6 +44,27 @@
                 $historial_precio = self::inicializar_desde_array($resultado[0]);
                 $historial_precio -> stock = StockLote::recuperar_sin_producto_por_id($historial_precio -> id_stock);
                 return $historial_precio;
+            } else return null;
+        }
+
+        public function save(){
+            $precio = $this -> precio;
+            $precio = Conexion::escaparCadena($precio);
+
+            $id_stock = $this -> id_stock;
+            $id_stock = Conexion::escaparCadena($id_stock);
+
+            
+            $consultaSQL = "INSERT INTO historial_precio(precio, id_stock) VALUE ($precio,$id_stock)";
+
+            $this -> id_histprecio = Conexion::nonQueryId($consultaSQL);
+        }
+
+        public static function actualizar_precio_por_id_producto($id_producto, $precio){
+            $ultimo_registro_precio = self::recuperar_actual_por_id_producto($id_producto);
+            if($ultimo_registro_precio!=null){
+                $ultimo_registro_precio -> precio = $precio;
+                $ultimo_registro_precio -> save();
             }
         }
     }

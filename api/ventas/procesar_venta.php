@@ -7,8 +7,11 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
-        //Por implementar
-        RespuestasHttp::error_500("Por implementar");
+        $factura = UtilesPost::obtener('factura');
+        $carrito = $factura -> carrito;
+        $factura_venta = new FacturaVenta();
+        $factura_venta->save();
+        $factura_venta->agregar_detalles_venta_desde_carrito($carrito);
     } else {
         RespuestasHttp::error_405();
     }
