@@ -20,7 +20,12 @@
             echo json_encode($marca);
         } else {
             //Consultar por muchos elementos
-            $resultados = Marca::consultarTodos();
+            $no_paginar = UtilesGet::obtener_opcional('no_paginar');
+            if($no_paginar == null){
+                $resultados = Marca::consultarTodos();
+            } else {
+                $resultados = Marca::consultarTodos(false);
+            }
             header('Content-Type: application/json');
             echo json_encode($resultados);
         }

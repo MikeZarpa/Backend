@@ -24,6 +24,9 @@
             $this -> id_producto = $id_producto;
             $this -> descripcion = $descripcion;
             $this -> cantidad_minima = $cantidad_minima;
+            if($id_marca == null){
+                $id_marca = "null";
+            }
             $this -> id_marca = $id_marca;
             $this -> habilitado = $habilitado;
         }
@@ -35,7 +38,7 @@
             if($paginar){
                 $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
                 $filtro = new Filtro(["producto.descripcion", "producto.habilitado", "marca.descripcion"]);
-                $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones()) ." GROUP BY producto.id_producto, producto.descripcion ";
+                $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones()) ." GROUP BY producto.id_producto, producto.descripcion ORDER BY producto.id_producto DESC";
                 $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
 
                 foreach ($pagina -> datos as $key => $value) {
@@ -82,7 +85,7 @@
 
         public function save(){
             $descripcion = Conexion::escaparCadena($this -> descripcion);
-            $cantidad_minima = $this -> cantidad ?? "null";
+            $cantidad_minima = $this -> cantidad_minima ?? "0";
             $cantidad_minima = Conexion::escaparCadena($cantidad_minima);
             $habilitado = $this -> habilitado ?? "null";
             $habilitado = Conexion::escaparCadena($habilitado);
@@ -98,7 +101,7 @@
         public function actualizar(){
             $id_producto = Conexion::escaparCadena($this -> id_producto); //Por motivos de seguridad
             $descripcion = Conexion::escaparCadena($this -> descripcion);
-            $cantidad_minima = $this -> cantidad ?? "null";
+            $cantidad_minima = $this -> cantidad_minima ?? "0";
             $cantidad_minima = Conexion::escaparCadena($cantidad_minima);
             $habilitado = $this -> habilitado ?? "null";
             $habilitado = Conexion::escaparCadena($habilitado);

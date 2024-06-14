@@ -16,18 +16,21 @@
             $this -> descripcion = $descripcion;
         }
 
-        public static function consultarTodos(){
+        public static function consultarTodos($paginar = true){
 
             $consultaSQL = "SELECT id_marca, descripcion FROM marca WHERE true ";
             //$pagina = new PaginableClass($consultaSQL, $numero_de_pagina);
+            if($paginar){
+                $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
+                $filtro = new Filtro(["marca.descripcion"]);
+                $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones());
             
-            $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
-            $filtro = new Filtro(["marca.descripcion"]);
-            $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones());
-            
-            $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
-
-            return $pagina;
+                $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
+                return $pagina;
+            } else {
+                $resultado = Conexion::obtenerDatos($consultaSQL);
+                return $resultado;
+            }
         }
 
         public static function recuperar_por_id($id_marca){
