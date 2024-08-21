@@ -16,22 +16,28 @@
             $this -> descripcion = $descripcion;
         }
 
-        public static function consultarTodos(){
+        public static function consultarTodos($paginar = true){
 
-            $consultaSQL = "SELECT id_categoria, descripcion FROM categoria WHERE true ";
+            $consultaSQL = "SELECT categoria.* FROM categoria WHERE true ";
             //$pagina = new PaginableClass($consultaSQL, $numero_de_pagina);
             
             $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
             $filtro = new Filtro(["categoria.descripcion"]);
             $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones());
-            
-            $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
+            $consulta_con_filtro = $consulta_con_filtro." ORDER BY categoria.id_categoria DESC";
+            if($paginar){
+                $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
 
-            return $pagina;
+                return $pagina;
+            } else {
+                $resultado = Conexion::obtenerDatos($consultaSQL);
+                return $resultado;
+            }
         }
 
         public static function recuperar_por_id($id_categoria){
-            $consultaSQL = "SELECT id_categoria, descripcion FROM categoria WHERE id_categoria = $id_categoria";
+            if($id_categoria == null) return null;
+            $consultaSQL = "SELECT categoria.* FROM categoria WHERE id_categoria = $id_categoria";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             if($resultado){
                 $categoria = self::inicializar_desde_array($resultado[0]);

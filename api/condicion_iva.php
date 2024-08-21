@@ -20,7 +20,8 @@
             echo json_encode($cond_iva);
         } else {
             //Consultar por muchos elementos
-            $resultados = CondicionIva::consultarTodos();
+            $paginar = !UtilesGet::verificar_encabezado('no_paginar');
+            $resultados = CondicionIva::consultarTodos($paginar);
             header('Content-Type: application/json');
             echo json_encode($resultados);
         }

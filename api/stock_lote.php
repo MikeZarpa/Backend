@@ -10,36 +10,34 @@
     //Consultar por 1 elemento
     //Consultar por muchos elementos
     if(UtilesRequest::es_get()){
-        //1 Solo elemento
-        if(UtilesGet::verificar_encabezado("id_stock")){
-            $id_stock = UtilesGet::obtener('id_stock');
-            $stock = StockLote::recuperar_por_id($id_stock);
-            if($stock == null)
-                RespuestasHttp::error_404();
+            $id_producto = UtilesGet::obtener('id_producto', "Falta identificar el producto");
+            $stock = StockLote::recuperar_todos_por_id_producto($id_producto);
             header('Content-Type: application/json');
             echo json_encode($stock);
-        } else {
-            //Consultar por muchos elementos
-            $resultados = StockLote::consultarTodos();
-            header('Content-Type: application/json');
-            echo json_encode($resultados);
-        }
     }
+    //Post crear nuevo
+    if(UtilesRequest::es_post()){
+        $id_producto = UtilesPost::obtener('id_producto', "Falta identificar el producto");
+        $cantidad = UtilesPost::obtener('cantidad', "La cantidad es inválida");
+        $coste = UtilesPost::obtener('coste', "El Coste no está presente");
+        $fecha_vto = UtilesPost::obtener_opcional('fecha_vto');
 
+        $stock = new StockLote(null, $id_producto,$cantidad,$coste,$fecha_vto);
+        $stock -> save();
+    }
     //PUT actualizar
     if(UtilesRequest::es_put()){
-        $id_stock = UtilesPost::obtener('id_stock');
-        $id_producto = UtilesPost::obtener('id_producto');
-        $cantidad = UtilesPost::obtener('cantidad');
-        $coste = UtilesPost::obtener('coste');
+        $id_stock = UtilesPost::obtener('id_stock', "Falta identificar el stock a modificar");
+        $id_producto = UtilesPost::obtener('id_producto', "Falta identificar el producto");
+        $cantidad = UtilesPost::obtener('cantidad', "La cantidad es inválida");
+        $coste = UtilesPost::obtener('coste', "El Coste no está presente");
         $fecha_vto = UtilesPost::obtener('fecha_vto');
-
         $stock = new StockLote($id_stock, $id_producto,$cantidad,$coste,$fecha_vto);
         $stock -> actualizar();
     }
     //Delete
     if(UtilesRequest::es_delete()){
-        $id_stock = UtilesGet::obtener('id_stock');
+        $id_stock = UtilesPost::obtener('id_stock', "Falta identificar el stock a modificar");
         $stock = StockLote::recuperar_por_id($id_stock);
         if($stock == null)
             RespuestasHttp::error_404();

@@ -26,11 +26,20 @@
         }
 
         public static function consultarTodos(){
-            RespuestasHttp::error_500("No implementado aun...");
+            RespuestasHttp::error_500("ConsultarTodos HistorialPrecio No implementado aun...");
         }
         
         public static function recuperar_por_id($id_histprecio){
-            RespuestasHttp::error_500("No implementado aun...");
+            if($id_histprecio == null) return null;
+
+            $consultaSQL = "SELECT * FROM historial_precio WHERE historial_precio.id_histprecio = $id_histprecio;";
+            $resultados = Conexion::obtenerDatos($consultaSQL);
+            if(!$resultados){
+                return RespuestasHttp::error_404("No se encontro el historial de precio");
+            }
+            $registro_historial = HistorialPrecio::inicializar_desde_array($resultados[0]);
+            $registro_historial -> stock = StockLote::recuperar_por_id($registro_historial -> id_stock);
+            return $registro_historial;
         }
 
         public static function inicializar_desde_array($array){
@@ -38,7 +47,7 @@
             return $historial_precio;
         }
         public static function recuperar_actual_por_id_producto($id_producto){            
-            $consultaSQL = "SELECT historial_precio.id_histprecio, historial_precio.precio, historial_precio.fecha_vigencia, historial_precio.id_stock FROM historial_precio JOIN stock_lote ON historial_precio.id_stock = stock_lote.id_stock WHERE stock_lote.id_producto = $id_producto AND historial_precio.fecha_vigencia = (SELECT MAX(historial_precio.fecha_vigencia) FROM historial_precio JOIN stock_lote ON historial_precio.id_stock = stock_lote.id_stock WHERE stock_lote.id_producto=$id_producto AND historial_precio.fecha_vigencia <= NOW())";
+            $consultaSQL = "SELECT historial_precio.* FROM historial_precio JOIN stock_lote ON historial_precio.id_stock = stock_lote.id_stock WHERE stock_lote.id_producto = $id_producto AND historial_precio.fecha_vigencia = (SELECT MAX(historial_precio.fecha_vigencia) FROM historial_precio JOIN stock_lote ON historial_precio.id_stock = stock_lote.id_stock WHERE stock_lote.id_producto=$id_producto AND historial_precio.fecha_vigencia <= NOW()) ORDER BY historial_precio.id_histprecio DESC";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             if($resultado){
                 $historial_precio = self::inicializar_desde_array($resultado[0]);
@@ -66,5 +75,26 @@
                 $ultimo_registro_precio -> precio = $precio;
                 $ultimo_registro_precio -> save();
             }
+        }
+
+        public function intentar_recargar_stock_producto(){
+            
+            $historial_precio_actual = self::recuperar_actual_por_id_producto($this -> stock -> id_producto);
+            //Si el historial de precio no es el más reciente, se informa que es necesario recargar, porque se está usando uno viejo
+            if($historial_precio_actual -> id_histprecio != $this -> id_histprecio)
+                return true;
+
+            $cantidad_actual = $this -> stock -> cantidad;
+            //Si aún hay stock, no necesitamos recargar...
+            if($cantidad_actual > 0) return false;
+
+            $nuevo_stock = StockLote::obtener_stock_mas_viejo_por_id_producto($this -> stock -> id_producto);
+
+            //Si ya estamos usando el stock más viejo, no necesitamos recargar...
+            if($nuevo_stock -> id_stock == $this -> id_stock) return false;
+
+            $this -> id_stock = $nuevo_stock -> id_stock;
+            $this -> save();
+            return true;
         }
     }

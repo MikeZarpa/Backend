@@ -29,6 +29,8 @@
         }
         
         public static function recuperar_por_id($id_direccion){
+            if($id_direccion == null) return null;
+
             $id_direccion = Conexion::escaparCadena($id_direccion);
             $consultaSQL = "SELECT direccion.id_direccion, direccion.calle, direccion.altura, direccion.piso, direccion.departamento, direccion.id_localidad FROM direccion WHERE id_direccion = $id_direccion";
             $resultado = Conexion::obtenerDatos($consultaSQL);

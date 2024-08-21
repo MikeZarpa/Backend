@@ -2,6 +2,7 @@
     require_once ($_SERVER['DOCUMENT_ROOT'].'/DIR_PUJOL.php');
     require_once(DIR_PUJOL."/clases/conexion/conexion.php");
     require_once(DIR_PUJOL.'/clases/conexion/respuestas_http.php');
+    require_once(DIR_PUJOL.'/clases/base_de_datos/usuario.php');
 
 
     class Token{
@@ -14,16 +15,17 @@
             header("Authorization: Bearer $token");
         }
 
-        public static function obtener_usuario_token(){
+        public static function obtener_usuario_token_actual(){
             $token = self::obtener_token();
             $resultado = Conexion::obtenerDatos("SELECT id_usuario FROM tokens_de_sesion WHERE token='$token' AND habilitado=1");
             if(count($resultado)>0){
-                $id_usuario = $resultado[0];
+                $id_usuario = $resultado[0]["id_usuario"];
                 $usuario = Usuario::recuperar_usuario_por_id($id_usuario);
                 if($usuario == null){
                     RespuestasHttp::error_401();
                 } else return $usuario;
-            }
+            }             
+            RespuestasHttp::error_406(); 
         }
 
         public static function obtener_token(){
@@ -40,10 +42,10 @@
                     $token = $matches[1]; // Extraer el token de la expresión regular
                     return $token;
                 } else {
-                    RespuestasHttp::error_403("Error de Token.");
+                    RespuestasHttp::error_406("Error de Token.");
                 }
             } else {
-                RespuestasHttp::error_401("Falta inicio de sesión.");
+                RespuestasHttp::error_406("Falta inicio de sesión.");
             }
         }
     }

@@ -13,7 +13,7 @@
     // Verificar si la decodificación fue exitosa y $data no es null
     if ($data !== null) {
         foreach ($data as $key => $value) {
-            if (gettype($value)!="array") {
+            if (gettype($value)!="array" && gettype($value)!= "integer"&& gettype($value)!= "double") {
                 $_POST[$key] = Conexion::escaparCadena($value);
             } else {
                 $_POST[$key] = $value;

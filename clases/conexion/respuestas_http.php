@@ -57,7 +57,6 @@ class RespuestasHttp {
         die();
     }
 
-    //MEh
     public static function error_405($valor = "Metodo no permitido") {
         http_response_code(405);    //Método no permitido - GET, POST, DELETE...
         self::$response['status'] = "error";
@@ -67,7 +66,18 @@ class RespuestasHttp {
         );
         echo json_encode(self::$response);
         die();
-    }  
+    }
+
+    public static function error_406($valor = "Token inválido, expirado u otro error fatal.") {
+        http_response_code(406);    //Método no permitido - GET, POST, DELETE...
+        self::$response['status'] = "error";
+        self::$response['result'] = array(
+            "error_id" => "406",
+            "error_msg" => $valor
+        );
+        echo json_encode(self::$response);
+        die();
+    } 
 
 
     public static function error_500($valor = "Error interno del servidor") {

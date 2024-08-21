@@ -20,7 +20,12 @@
             echo json_encode($categoria);
         } else {
             //Consultar por muchos elementos
-            $resultados = Categoria::consultarTodos();
+            $no_paginar = UtilesGet::obtener_opcional('no_paginar');
+            if($no_paginar == null){
+                $resultados = Categoria::consultarTodos();
+            } else {
+                $resultados = Categoria::consultarTodos(false);
+            }
             header('Content-Type: application/json');
             echo json_encode($resultados);
         }

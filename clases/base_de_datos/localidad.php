@@ -30,6 +30,7 @@
             $numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
             $filtro = new Filtro(["localidad.descripcion"]);
             $consulta_con_filtro = $consultaSQL.($filtro -> generar_condiciones());            
+            $consulta_con_filtro = $consulta_con_filtro." ORDER BY localidad.descripcion ASC";
             $pagina = new PaginableClass($consulta_con_filtro, $numero_de_pagina);
             foreach ($pagina->datos as $key => $value) {
                 $pagina -> datos[$key]['provincia'] = Provincia::recuperar_por_id($value['id_provincia']);
@@ -38,6 +39,7 @@
         }
 
         public static function recuperar_por_id($id_localidad){
+            if($id_localidad == null) return null;
             $id_localidad = Conexion::escaparCadena($id_localidad);
             $consultaSQL = "SELECT id_localidad, descripcion, codigo_postal, id_provincia FROM localidad WHERE id_localidad = $id_localidad";
             $resultado = Conexion::obtenerDatos($consultaSQL);
@@ -50,6 +52,7 @@
         public static function recuperar_por_provincia($id_provincia){
             $id_provincia = Conexion::escaparCadena($id_provincia);
             $consultaSQL = "SELECT id_localidad, descripcion, codigo_postal, id_provincia FROM localidad WHERE id_provincia=$id_provincia ";
+            $consultaSQL = $consultaSQL." ORDER BY localidad.descripcion ASC";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             return $resultado;
         }

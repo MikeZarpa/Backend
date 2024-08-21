@@ -24,6 +24,8 @@
         public static function consultarTodos(){
 
             $consultaSQL = "SELECT id_provincia, descripcion, id_pais FROM provincia WHERE true ";
+
+            $consultaSQL = $consultaSQL." ORDER BY provincia.descripcion ASC";
             //$pagina = new PaginableClass($consultaSQL, $numero_de_pagina);
             
             /*$numero_de_pagina = UtilesGet::obtener_opcional('nroPagina');
@@ -36,6 +38,8 @@
         }
 
         public static function recuperar_por_id($id_provincia){
+            if($id_provincia == null) return null;
+
             $consultaSQL = "SELECT id_provincia, descripcion, id_pais FROM provincia WHERE id_provincia = $id_provincia";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             if($resultado){
@@ -47,6 +51,7 @@
         public static function recuperar_por_id_pais($id_pais){
             $id_pais = Conexion::escaparCadena($id_pais);
             $consultaSQL = "SELECT id_provincia, descripcion, id_pais FROM provincia WHERE id_pais=$id_pais ";
+            $consultaSQL = $consultaSQL." ORDER BY provincia.descripcion ASC";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             return $resultado;
         }

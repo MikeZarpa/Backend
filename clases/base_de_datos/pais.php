@@ -32,6 +32,8 @@
         }
 
         public static function recuperar_por_id($id_pais){
+            if($id_pais == null) return null;
+            
             $consultaSQL = "SELECT id_pais, descripcion FROM pais WHERE id_pais = $id_pais";
             $resultado = Conexion::obtenerDatos($consultaSQL);
             if($resultado){

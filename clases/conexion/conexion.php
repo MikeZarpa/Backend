@@ -83,9 +83,11 @@ class Conexion {
                 self::$database = $value['database'];
                 self::$port = $value['port'];
             }
-            self::$conexion = new mysqli(self::$server, self::$user, self::$password, self::$database, self::$port);
-            if (self::$conexion->connect_errno) {
-                RespuestasHttp::error_500();
+            try {
+                self::$conexion = new mysqli(self::$server, self::$user, self::$password, self::$database, self::$port);
+                if (self::$conexion->connect_errno) RespuestasHttp::error_500("Error al conectar con la Base de Datos");
+            } catch (\Throwable $th) {
+                RespuestasHttp::error_500("Error al conectar con la Base de Datos");
             }
         }
     }
@@ -117,6 +119,8 @@ class Conexion {
 
         public static function escaparCadena($cadena) {
             self::iniciarConexion();
+            if(!is_numeric($cadena)&& $cadena ==null)
+                return null;
             // Escapar caracteres especiales para prevenir inyección SQL
             return self::$conexion->real_escape_string($cadena);
         } 

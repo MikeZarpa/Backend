@@ -33,14 +33,21 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
-        $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
-        $marca = new Marca(null, $descripcion);
+        $descripcion = UtilesPost::obtener('descripcion', "Falta la descripción de la marca");
+        $habilitado = UtilesPost::obtener_opcional("habilitado") ?? 1;
+        $marca = new Marca(null, $descripcion, $habilitado);
         $marca -> save();
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
-        $id_marca = UtilesPost::obtener('id_marca');
+        $id_marca = UtilesPost::obtener('id_marca', "No se identificó la marca");
         $descripcion = UtilesPost::obtener('descripcion');
-        $marca = new Marca($id_marca, $descripcion);
+        $marca = new Marca($id_marca, $descripcion, $habilitado);
         $marca -> actualizar();
+    }
+
+    if(UtilesRequest::es_delete()){
+        $id_marca = UtilesPost::obtener('id_marca', "No se identificó la marca en el body");
+        $marca = Marca::recuperar_por_id($id_marca);
+        $marca -> alternar_habilitacion_de_la_marca();
     }

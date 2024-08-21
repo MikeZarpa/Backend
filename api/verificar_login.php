@@ -15,9 +15,7 @@
         $email = UtilesPost::obtener_opcional("email");
         $username = UtilesPost::obtener_opcional("username");
 
-        $usuario = new Usuario($username, $email, $password);
-        $usuario -> iniciar_sesion();
-
+        $usuario = Usuario::iniciar_sesion($username,$email,$password);
         echo json_encode($usuario);
     } else{        
         RespuestasHttp::error_405();

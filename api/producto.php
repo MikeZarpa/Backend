@@ -36,20 +36,46 @@
         $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
         $cantidad_minima = UtilesPost::obtener_opcional('cantidad_minima');
         $id_marca = UtilesPost::obtener_opcional('id_marca');
+        $id_categoria = UtilesPost::obtener_opcional('id_categoria');
         $habilitado = UtilesPost::obtener_opcional('habilitado');
 
-        $producto = new Producto(null, $descripcion, $cantidad_minima, $id_marca, $habilitado);
+        //Para el historial de precios
+        $historial_precio_post = UtilesPost::obtener("historial_precio", "Falta el precio del producto");
+        if(!isset($historial_precio_post["precio"]))
+            RespuestasHttp::error_400("No está presente el precio del producto");
+        $precio = $historial_precio_post["precio"];
+
+        if(!isset($historial_precio_post['stock']))
+            RespuestasHttp::error_400("No esta presente datos del stock");
+        $stock_post = $historial_precio_post['stock'];
+
+        if(!isset($stock_post["cantidad"]) || !isset($stock_post["coste"]))
+            RespuestasHttp::error_400("Error con el registro de Stock del nuevo producto");
+
+        $cantidad = $stock_post["cantidad"];
+        $coste = $stock_post["coste"];
+            
+        //Guardamos el producto
+        $producto = new Producto(null, $descripcion, $cantidad_minima, $id_marca, $habilitado, $id_categoria);
         $producto -> save();
+
+        //Generamos el registro de Stock
+        $stock = new StockLote(null,$producto->id_producto,$cantidad,$coste,null);
+        $stock -> save();
+        //Generamos el historial de precio
+        $historial_precio = new HistorialPrecio(null, $precio,null,$stock->id_stock);
+        $historial_precio -> save();
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
-        $id_producto = UtilesPost::obtener('id_producto');
-        $descripcion = UtilesPost::obtener('descripcion');
-        $cantidad_minima = UtilesPost::obtener('cantidad_minima');
-        $id_marca = UtilesPost::obtener('id_marca');
-        $habilitado = UtilesPost::obtener('habilitado');
+        $id_producto = UtilesPost::obtener('id_producto',"Falta la id del producto.");
+        $descripcion = UtilesPost::obtener('descripcion', "Falta el nombre del producto.");
+        $cantidad_minima = UtilesPost::obtener('cantidad_minima', "Falta la cantidad minima del producto.");
+        $id_marca = UtilesPost::obtener_opcional('id_marca');
+        $habilitado = UtilesPost::obtener('habilitado', "Falta la habilitación del producto");
+        $id_categoria = UtilesPost::obtener_opcional('id_categoria');
 
-        $producto = new Producto($id_producto, $descripcion, $cantidad_minima, $id_marca, $habilitado);
+        $producto = new Producto($id_producto, $descripcion, $cantidad_minima, $id_marca, $habilitado,$id_categoria);
         $producto -> actualizar();
     }
     if(UtilesRequest::es_delete()){
