@@ -40,7 +40,7 @@
             return $metodo_pago;
         }
 
-        public function alternar_habilitacion_de_la_metodo_de_pago(){
+        public function alternar_habilitacion_del_metodo_de_pago(){
             $id_metpago = Conexion::escaparCadena($this -> id_metpago);
 
             //Verificamos si el usuario existe...
