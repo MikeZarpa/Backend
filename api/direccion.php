@@ -4,7 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/direccion.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
 
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
     //GET, POST, PUT
     //GET obtener información
     //Consultar por 1 elemento
@@ -29,15 +31,7 @@
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
-        $id_direccion = UtilesPost::obtener('id_direccion');
-        $calle = UtilesPost::obtener_opcional('calle', "Faltan campos");
-        $altura = UtilesPost::obtener_opcional('altura', "Faltan campos");
-        $piso = UtilesPost::obtener_opcional('piso', "Faltan campos");
-        $departamento = UtilesPost::obtener_opcional('departamento', "Faltan campos");
-        $id_localidad = UtilesPost::obtener('id_localidad', "Faltan campos");
-
-        $direccion = new Direccion($id_direccion, $calle, $altura, $piso, $departamento, $id_localidad);
-        $direccion -> actualizar();
+        RespuestasHttp::error_405();
     }
     if(UtilesRequest::es_delete()){
         RespuestasHttp::error_405(); // No se permite este método...

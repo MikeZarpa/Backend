@@ -25,11 +25,12 @@
         public $cond_iva = null;
         public $metodo_pago = null;
         public $detalles_venta = null;
-        public function __construct($id_factura_venta,$id_usuario, $id_cliente = null)
+        public function __construct($id_factura_venta,$id_usuario, $id_cliente = null, $id_metodo_pago = 1)
         {
             $this -> id_factura_venta = $id_factura_venta;
             $this -> id_usuario = $id_usuario;
             $this -> id_cliente = $id_cliente;
+            $this -> id_metodo_pago = $id_metodo_pago;
         }
 
         public static function consultarTodos($paginar = true){
@@ -115,7 +116,9 @@
         public function agregar_detalles_venta_desde_carrito($array_carrito){
             $id_factura_venta = $this -> id_factura_venta;
 
-            foreach ($array_carrito as $elemento_carrito) {
+            for ($i = 0; $i < count($array_carrito); $i++){
+                $elemento_carrito = $array_carrito[$i];
+            
                 //Vamos a procesar cada item del carrito
                 $cantidad = $elemento_carrito['cantidad'];
                 $id_histprecio = $elemento_carrito['id_histprecio'] ?? "null";

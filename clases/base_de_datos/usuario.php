@@ -68,7 +68,7 @@
         public static function iniciar_sesion($username, $email, $password){
             $username = Conexion::escaparCadena($username);
             $email = Conexion::escaparCadena($email);
-            $password = Conexion::escaparCadena($password);
+            $password = Conexion::encriptar($password);
 
             $resultado =  Conexion::obtenerDatos("SELECT * FROM usuarios WHERE (username = '$username' OR email = '$email') AND password = '$password'");
             
@@ -188,12 +188,12 @@
 
         public static function cambiar_contrasena($id_usuario_objetivo, $nueva_contrasena, $id_usuario_solicitante, $contrasena_actual){
             $id_usuario_objetivo = Conexion::escaparCadena($id_usuario_objetivo);
-            $nueva_contrasena = Conexion::escaparCadena($nueva_contrasena);
+            $nueva_contrasena = Conexion::encriptar($nueva_contrasena);
             $id_usuario_solicitante = Conexion::escaparCadena($id_usuario_solicitante);
-            $contrasena_actual = Conexion::escaparCadena($contrasena_actual);
+            $contrasena_actual_del_solicitante = Conexion::encriptar($contrasena_actual);
 
-            //Verificamos si el usuario existe...
-            $consultaSQL_VerificacionExistencia = "SELECT * FROM usuarios WHERE id_usuario = $id_usuario_solicitante AND password = '$contrasena_actual';";
+            //Verificamos si el usuario administrador existe...
+            $consultaSQL_VerificacionExistencia = "SELECT * FROM usuarios WHERE id_usuario = $id_usuario_solicitante AND password = '$contrasena_actual_del_solicitante';";
             $cantidad_de_coincidencias = Conexion::nonQuery($consultaSQL_VerificacionExistencia);
             if($cantidad_de_coincidencias != 1)
                 RespuestasHttp::error_404("Error al verificar las credenciales del usuario");
@@ -206,5 +206,7 @@
             //Efectuamos la actualización
             $consultaActualizacion = "UPDATE usuarios SET password='$nueva_contrasena' WHERE id_usuario = $id_usuario_objetivo;";
             Conexion::nonQuery($consultaActualizacion);
+            //Deshabilitamos el token para formar el inicio de sesión de la persona...
+            Token::deshabilitar_tokens($id_usuario_objetivo);
         }
     }

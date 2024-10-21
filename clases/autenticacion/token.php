@@ -14,6 +14,9 @@
             Conexion::nonQuery("INSERT INTO tokens_de_sesion (id_usuario,token)VALUES('$id_usuario','$token')");
             header("Authorization: Bearer $token");
         }
+        public static function deshabilitar_tokens($id_usuario){
+            Conexion::nonQuery("UPDATE tokens_de_sesion SET habilitado=0 WHERE id_usuario='$id_usuario' AND habilitado=1");
+        }
 
         public static function obtener_usuario_token_actual(){
             $token = self::obtener_token();
@@ -25,7 +28,7 @@
                     RespuestasHttp::error_401();
                 } else return $usuario;
             }             
-            RespuestasHttp::error_406(); 
+            RespuestasHttp::error_401(); 
         }
 
         public static function obtener_token(){
@@ -45,7 +48,7 @@
                     RespuestasHttp::error_406("Error de Token.");
                 }
             } else {
-                RespuestasHttp::error_406("Falta inicio de sesión.");
+                RespuestasHttp::error_401("Falta inicio de sesión.");
             }
         }
     }

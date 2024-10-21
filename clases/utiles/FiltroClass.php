@@ -103,6 +103,7 @@
             $campo_a_usar = $array_campos[($this -> campo)];
 
             $terminoBusqueda1 = Conexion::escaparCadena($this -> terminosDeBusqueda[0]);
+            //Determina la forma de la cadena según el tipo de comparación
             switch ($this -> tipoBusqueda) {
                 case TipoDeComparacion::CONTIENE:
                     return " AND $campo_a_usar LIKE '%$terminoBusqueda1%' ";

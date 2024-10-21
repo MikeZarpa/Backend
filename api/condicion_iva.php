@@ -4,6 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/condicion_iva.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
 
     //GET, POST, PUT
     //GET obtener información
@@ -32,9 +35,11 @@
 
     //PUT actualizar
     if(UtilesRequest::es_put()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_cond_iva = UtilesPost::obtener('id_cond_iva');
         $descripcion = UtilesPost::obtener('descripcion');
-        $cond_iva = new CondicionIva($id_cond_iva, $descripcion);
+        $cond_iva = CondicionIva::recuperar_por_id($id_cond_iva);
+        $cond_iva -> descripcion = $descripcion;
         $cond_iva -> actualizar();
     }
     if(UtilesRequest::es_delete()){

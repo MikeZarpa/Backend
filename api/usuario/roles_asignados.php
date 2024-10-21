@@ -7,6 +7,9 @@
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     
 
+    GestorDePermisos::ExigirRol(["ADMIN"]);
+    
+
     //GET, POST, PUT
     //GET obtener información
     //Consultar por 1 elemento

@@ -4,7 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/marca.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
 
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
     //GET, POST, PUT
     //GET obtener información
     //Consultar por 1 elemento
@@ -33,6 +35,7 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $descripcion = UtilesPost::obtener('descripcion', "Falta la descripción de la marca");
         $habilitado = UtilesPost::obtener_opcional("habilitado") ?? 1;
         $marca = new Marca(null, $descripcion, $habilitado);
@@ -40,6 +43,7 @@
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_marca = UtilesPost::obtener('id_marca', "No se identificó la marca");
         $descripcion = UtilesPost::obtener('descripcion');
         $marca = new Marca($id_marca, $descripcion, $habilitado);
@@ -47,6 +51,7 @@
     }
 
     if(UtilesRequest::es_delete()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_marca = UtilesPost::obtener('id_marca', "No se identificó la marca en el body");
         $marca = Marca::recuperar_por_id($id_marca);
         $marca -> alternar_habilitacion_de_la_marca();

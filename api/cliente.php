@@ -4,7 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/cliente.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
 
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
     //GET, POST, PUT
     //GET obtener información
     //Consultar por 1 elemento
@@ -48,6 +50,7 @@
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_cliente = UtilesPost::obtener('id_cliente');
         $nombre = UtilesPost::obtener('nombre', "Faltan campos");
         $apellido = UtilesPost::obtener('apellido', "Faltan campos");
@@ -67,6 +70,7 @@
         }
     }
     if(UtilesRequest::es_delete()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_cliente = UtilesPost::obtener('id_cliente', "No se identificó el cliente en el body");
         $cliente = Cliente::recuperar_por_id($id_cliente);
         $cliente -> alternar_habilitacion_del_cliente();

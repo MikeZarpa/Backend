@@ -4,6 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/producto.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
 
     //GET, POST, PUT
     //GET obtener información
@@ -33,7 +36,8 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
-        $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
+        GestorDePermisos::ExigirRol(["ADMIN"]);
+        $descripcion = UtilesPost::obtener('descripcion', "Faltan campo descripción para crear un nuevo producto");
         $cantidad_minima = UtilesPost::obtener_opcional('cantidad_minima');
         $id_marca = UtilesPost::obtener_opcional('id_marca');
         $id_categoria = UtilesPost::obtener_opcional('id_categoria');
@@ -68,6 +72,7 @@
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_producto = UtilesPost::obtener('id_producto',"Falta la id del producto.");
         $descripcion = UtilesPost::obtener('descripcion', "Falta el nombre del producto.");
         $cantidad_minima = UtilesPost::obtener('cantidad_minima', "Falta la cantidad minima del producto.");
@@ -79,6 +84,7 @@
         $producto -> actualizar();
     }
     if(UtilesRequest::es_delete()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_producto = UtilesGet::obtener('id_producto');
         $producto = Producto::recuperar_por_id($id_producto);
         if($producto == null)

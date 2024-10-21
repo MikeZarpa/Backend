@@ -4,6 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/localidad.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
 
     //GET, POST, PUT
     //GET obtener información
@@ -30,6 +33,7 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
         $id_provincia = UtilesPost::obtener('id_provincia', "Faltan campos");
         $codigo_postal = UtilesPost::obtener('codigo_postal', "Faltan campos");
@@ -40,6 +44,7 @@
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_localidad = UtilesPost::obtener('id_localidad', "Faltan campos");
         $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
         $id_provincia = UtilesPost::obtener('id_provincia', "Faltan campos");
@@ -50,6 +55,7 @@
     }
     //Delete
     if(UtilesRequest::es_delete()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_localidad = UtilesGet::obtener('id_localidad');
         $localidad = Localidad::recuperar_por_id($id_localidad);
         if($localidad == null)

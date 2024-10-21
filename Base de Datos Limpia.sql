@@ -23345,9 +23345,9 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 
 -- Volcando datos para la tabla tp_pujol_db.usuarios: ~3 rows (aproximadamente)
 INSERT INTO `usuarios` (`id_usuario`, `username`, `password`, `email`, `nombre`, `apellido`, `palabra_secreta`, `habilitado`) VALUES
-	(1, 'administrador', 'admin', 'admin@admin', 'Administrador', 'Administrador', 'Pure de papas', 1),
-	(2, 'Eric Cajero', 'Eric1234', 'eric@the-best-cajero.com.ar', 'Erick', 'Ferreira', 'Perfume Chino', 1),
-	(3, 'dev', 'dev', 'dev@dev', 'Desarrollador', 'Desarrollador', 'marinera de bola de lomo', 1);
+	(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin@admin', 'Administrador', 'Administrador', 'Pure de papas', 1),
+	(2, 'eric', '29988429c481f219b8c5ba8c071440e1', 'eric@the-best-cajero.com.ar', 'Erick', 'Ferreira', 'Perfume Chino', 1),
+	(3, 'dev', 'e77989ed21758e78331b20e477fc5582', 'dev@dev', 'Desarrollador', 'Desarrollador', 'marinera de bola de lomo', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

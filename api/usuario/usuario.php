@@ -4,6 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/usuario.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN"]);
 
     //GET, POST, PUT
     //GET obtener información
@@ -29,6 +32,8 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
+        
         $username = UtilesPost::obtener("username", "Falta nombre de usuario");
         $email = UtilesPost::obtener("email", "Falta el correo");
         $password = UtilesPost::obtener("password", "Falta la contraseña");

@@ -20,8 +20,8 @@
 
         public $total_cantidad = null;
         public $marca = null;
-        public $historial_precio = null;
         public $categoria=null;
+        public $historial_precio = null;
         public $ultimo_stock = null;
 
         public function __construct($id_producto, $descripcion, $cantidad_minima, $id_marca, $habilitado, $id_categoria)

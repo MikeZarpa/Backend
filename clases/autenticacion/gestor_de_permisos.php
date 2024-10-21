@@ -23,7 +23,7 @@
 
         public static function PoseeElRol($roles = []){
             self::RequerirTenerSesionIniciada();
-            $bandera = false;            
+            $bandera = false;  //Al menos 1 debe tener          
             foreach ($roles as $value) {
                 if(in_array($value, self::$codigo_roles_del_usuario))
                     $bandera = true;

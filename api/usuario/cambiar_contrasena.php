@@ -3,6 +3,10 @@
     require_once (DIR_PUJOL."/utiles/utilidades_request.php");
     require_once (DIR_PUJOL."/clases/base_de_datos/usuario.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN"]);
+
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){

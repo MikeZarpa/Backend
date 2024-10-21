@@ -110,7 +110,7 @@
             $build_filtro = new BuildFiltroStockLote();
             $build_filtro -> producto_habilitado('1',TipoDeComparacion::LITERAL);
             $build_filtro -> stock_cantidad('0', TipoDeComparacion::MAYOR_QUE);
-            $build_filtro -> stock_vencimiento('1',null, TipoDeComparacion::POR_NULIDAD);
+            $build_filtro -> stock_vencimiento('1',null, TipoDeComparacion::POR_NULIDAD);   //Vencimiento no nulo
             $build_filtro -> finalizar();
 
             $registros_de_stock = StockLote::recuperar_todos(false);

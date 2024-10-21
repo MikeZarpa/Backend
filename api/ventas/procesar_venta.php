@@ -5,6 +5,9 @@
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
     require_once (DIR_PUJOL."/clases/base_de_datos/factura_venta.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
@@ -12,7 +15,8 @@
         $factura = UtilesPost::obtener('factura');
         $carrito = $factura["carrito"];
         $id_cliente = $factura["id_cliente"];
-        $factura_venta = new FacturaVenta(null,$id_usuario, $id_cliente);
+        $id_metodo_pago = $factura["id_metodo_pago"];
+        $factura_venta = new FacturaVenta(null,$id_usuario, $id_cliente, $id_metodo_pago);
         $factura_venta->save();
         $factura_venta->agregar_detalles_venta_desde_carrito($carrito);
         

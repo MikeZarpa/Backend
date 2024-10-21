@@ -49,6 +49,5 @@
                 $this -> ultima_pagina = max(1,$cantidad_total_paginas);
                 //Total_elementos
                 $this -> total_elementos = $cantidad_total;
-
         }
     }

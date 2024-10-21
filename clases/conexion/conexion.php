@@ -68,7 +68,7 @@ class Conexion {
     }
      
     //encriptar, para contraseñas
-    protected static function encriptar($string){
+    public static function encriptar($string){
         return md5($string);
     }
 

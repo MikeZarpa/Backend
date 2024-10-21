@@ -4,6 +4,9 @@
     require_once (DIR_PUJOL."/clases/base_de_datos/categoria.php");
     require_once (DIR_PUJOL."/utiles/utilidades_get.php");
     require_once (DIR_PUJOL."/clases/conexion/respuestas_http.php");
+    
+
+    GestorDePermisos::ExigirRol(["ADMIN","CAJERO"]);
 
     //GET, POST, PUT
     //GET obtener información
@@ -33,12 +36,14 @@
 
     //POST crear uno nuevo
     if(UtilesRequest::es_post()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $descripcion = UtilesPost::obtener('descripcion', "Faltan campos");
         $categoria = new Categoria(null, $descripcion);
         $categoria -> save();
     }
     //PUT actualizar
     if(UtilesRequest::es_put()){
+        GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_categoria = UtilesPost::obtener('id_categoria');
         $descripcion = UtilesPost::obtener('descripcion');
         $categoria = new Categoria($id_categoria, $descripcion);
