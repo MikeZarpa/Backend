@@ -46,6 +46,7 @@
         GestorDePermisos::ExigirRol(["ADMIN"]);
         $id_marca = UtilesPost::obtener('id_marca', "No se identificó la marca");
         $descripcion = UtilesPost::obtener('descripcion');
+        $habilitado = UtilesPost::obtener_opcional("habilitado") ?? 1;
         $marca = new Marca($id_marca, $descripcion, $habilitado);
         $marca -> actualizar();
     }

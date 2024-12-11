@@ -1,0 +1,236 @@
+CREATE SCHEMA catalogo;
+
+SET SEARCH_PATH TO catalogo;
+
+CREATE SEQUENCE seq_marca;
+
+CREATE TABLE marca (
+    id INTEGER PRIMARY KEY DEFAULT nextval('seq_marca'),
+    descripcion VARCHAR(50) DEFAULT 'Nueva Marca' NOT NULL
+);
+
+	-- Creación de la secuencia para el ID del producto
+CREATE SEQUENCE seq_producto;	--Para autoincrement
+
+-- Creación de la tabla producto
+CREATE TABLE producto (
+	id INTEGER PRIMARY KEY DEFAULT nextval('seq_producto'),
+	descripcion VARCHAR(80) DEFAULT 'Nuevo Producto' NOT NULL,
+	stock INTEGER DEFAULT 0 NOT NULL,
+	coste FLOAT NOT NULL,
+	precio FLOAT NOT NULL,
+	habilitado smallint DEFAULT 1 NOT NULL,
+	id_marca INTEGER
+);
+
+ALTER TABLE producto
+ADD CONSTRAINT fk_producto_marca
+FOREIGN KEY (id_marca) REFERENCES marca(id)
+ON DELETE RESTRICT
+ON UPDATE CASCADE;
+
+
+------------
+CREATE SCHEMA usuarios;
+
+SET SEARCH_PATH TO usuarios;
+
+CREATE SEQUENCE seq_usuario;
+
+CREATE TABLE usuario (
+    id INTEGER PRIMARY KEY DEFAULT nextval('seq_usuario'),
+	username VARCHAR(60) NOT NULL,
+	password VARCHAR(60) NOT NULL,
+	email VARCHAR(60) NOT NULL
+);
+
+CREATE SEQUENCE seq_rol;	--Para autoincrement
+
+-- Creación de la tabla rol
+CREATE TABLE rol (
+    id INTEGER PRIMARY KEY DEFAULT nextval('seq_rol'),
+	descripcion VARCHAR(80) NOT NULL,
+	codigo VARCHAR(30) NOT NULL
+);
+
+CREATE SEQUENCE seq_rol_asignacion;	--Para autoincrement
+
+CREATE TABLE rol_asignacion (
+    id INTEGER PRIMARY KEY DEFAULT nextval('seq_rol_asignacion'),
+	id_usuario INTEGER NOT NULL,
+	id_rol INTEGER NOT NULL
+);
+
+ALTER TABLE rol_asignacion
+ADD CONSTRAINT fk_rol_asignacion_rol
+FOREIGN KEY (id_rol) REFERENCES rol(id)
+ON DELETE RESTRICT
+ON UPDATE CASCADE,
+ADD CONSTRAINT fk_rol_asignacion_usuario
+FOREIGN KEY (id_usuario) REFERENCES usuario(id)
+ON DELETE RESTRICT
+ON UPDATE CASCADE;
+
+
+--------------------------
+
+CREATE SCHEMA ventas;
+
+SET SEARCH_PATH TO ventas;
+
+CREATE SEQUENCE seq_venta;
+
+CREATE TABLE venta (
+	id INTEGER PRIMARY KEY DEFAULT nextval('seq_venta'),
+	fecha TIMESTAMP NOT NULL DEFAULT NOW(),
+	id_usuario INTEGER NOT NULL
+);
+
+	-- Creación de la secuencia para el ID del producto
+CREATE SEQUENCE seq_detalle_venta;	--Para autoincrement
+
+-- Creación de la tabla producto
+CREATE TABLE detalle_venta (
+	id INTEGER PRIMARY KEY DEFAULT nextval('seq_detalle_venta'),
+	cantidad INTEGER NOT NULL,
+	id_venta INTEGER NOT NULL,
+	id_producto INTEGER NOT NULL
+);
+
+ALTER TABLE detalle_venta
+ADD CONSTRAINT fk_detalle_venta_venta
+FOREIGN KEY (id_venta) REFERENCES venta(id)
+ON DELETE RESTRICT
+ON UPDATE CASCADE,
+ADD CONSTRAINT fk_detalle_venta_producto
+FOREIGN KEY (id_producto) REFERENCES catalogo.producto(id)
+ON DELETE RESTRICT
+ON UPDATE CASCADE;
+
+ALTER TABLE venta
+ADD CONSTRAINT fk_venta_usuario
+FOREIGN KEY (id_usuario) REFERENCES usuarios.usuario(id)
+ON DELETE RESTRICT
+ON UPDATE CASCADE;
+
+------------------------
+
+
+CREATE OR REPLACE FUNCTION actualizar_stock()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Establecemos el SEARCH_PATH para buscar en los esquemas 'ventas' y 'catalogo'
+  SET search_path TO ventas, catalogo;
+
+  UPDATE producto
+  SET stock = stock - NEW.cantidad
+  WHERE producto.id = NEW.id_producto;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER actualizar_stock_detalle_venta
+AFTER INSERT ON ventas.detalle_venta
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_stock();
+
+-------------------
+ALTER TABLE catalogo.producto
+ADD cantidad_minima INTEGER NOT NULL DEFAULT 0;
+----
+
+
+CREATE OR REPLACE FUNCTION contar_productos_bajo_stock()
+RETURNS INTEGER AS $$
+DECLARE
+    conteo_bajo_stock INTEGER;
+BEGIN
+    -- Contar productos cuyo stock está por debajo del umbral especificado
+    SELECT COUNT(*)
+    INTO conteo_bajo_stock
+    FROM catalogo.producto
+    WHERE stock < cantidad_minima;
+
+    RETURN conteo_bajo_stock;
+END;
+$$ LANGUAGE plpgsql;
+
+------
+
+CREATE OR REPLACE FUNCTION registrar_detalle_venta(
+    p_id_venta INTEGER,
+    p_id_usuario INTEGER,
+    p_id_producto INTEGER,
+    p_cantidad INTEGER
+)
+RETURNS INTEGER AS $$
+DECLARE
+    nuevo_id_venta INTEGER;
+BEGIN
+    -- Verificar si id_venta es NULL
+    IF p_id_venta IS NULL THEN
+        -- Crear una nueva venta y obtener su id
+        INSERT INTO ventas.venta(id_usuario) 
+        VALUES (p_id_usuario)
+        RETURNING id INTO nuevo_id_venta;
+    ELSE
+        -- Usar el id_venta recibido
+        nuevo_id_venta := p_id_venta;
+    END IF;
+
+    -- Insertar el registro en detalle_venta con la id_venta correspondiente
+    INSERT INTO ventas.detalle_venta(id_venta, id_producto, cantidad)
+    VALUES (nuevo_id_venta, p_id_producto, p_cantidad);
+
+    -- Retornar el id_venta utilizado
+    RETURN nuevo_id_venta;
+END;
+$$ LANGUAGE plpgsql;
+
+----------
+INSERT INTO catalogo.marca(descripcion) VALUES
+    ('GATORADE'), ('BRAHMA'), ('COCA-COLA');
+
+INSERT INTO catalogo.producto(
+    descripcion, stock, coste, precio, habilitado, id_marca)
+    VALUES ('BEBIDA ENERGETICA 750ml', 50, 850, 1000, 1, 1),
+           ('CERVEZA 1L', 48, 220, 260, 1, 2),
+           ('BEBIDA GASEOSA 1,5L', 24, 1800, 2000, 1, 3);
+
+-------------
+INSERT INTO usuarios.rol(descripcion, codigo) VALUES ('ADMINISTRADOR', 'ADMIN'), ('CAJERO','CAJ');
+
+INSERT INTO usuarios.usuario(username, password, email) VALUES
+	('ADMINISTRADOR', 'ADMIN', 'admin@admin.com'),
+	('EricCajero', 'cajero', 'cajero@cajero.com');
+
+INSERT INTO usuarios.rol_asignacion(id_usuario, id_rol) VALUES
+	(1,1),
+	(2,2);
+--------
+CREATE OR REPLACE FUNCTION actualizar_precio_producto(id_producto INTEGER, nuevo_precio FLOAT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    num_filas INTEGER;
+BEGIN
+    -- Verificar si el nuevo precio es mayor o igual al costo
+    IF nuevo_precio < (SELECT coste FROM catalogo.producto WHERE id = id_producto) THEN
+        RETURN FALSE;
+    END IF;
+
+    -- Actualizar el precio
+    UPDATE catalogo.producto
+    SET precio = nuevo_precio
+    WHERE id = id_producto;
+
+    -- Obtener el número de filas afectadas
+    GET DIAGNOSTICS num_filas = ROW_COUNT;
+
+    -- Retornar TRUE si se actualizó al menos una fila
+    RETURN num_filas > 0;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+

@@ -113,7 +113,7 @@
                 <li>Abra el navegador web y diríjase a la página de inicio de sesión del sistema de compra-venta.</li>
                 <li>Ingrese su nombre de usuario y contraseña proporcionados al momento de la configuración del sistema.</li>
                 <li>Haga clic en el botón "Iniciar sesión".</li>
-                <li>Si las credenciales son correctas, será redirigido a la interfaz principal del administrador, donde podrá realizar operaciones como la compra a proveedores, gestión de inventario y generación de informes de ventas.</li>
+                <li>Si las credenciales son correctas, será redirigido a la interfaz principal del administrador, donde podrá además de las opciones del cajero, podrá acceder a gestión de stock y generación de informes de ventas, pestaña matenimiento.</li>
                 <li>En caso de olvidar la contraseña, utilice la opción de recuperación de contraseña o contacte al soporte técnico para recibir ayuda.</li>
             </ol>
         </p>
@@ -121,13 +121,35 @@
         <h2 id="cajero">3. Funcionalidades del Cajero</h2>
 
         <h3 id="registro-venta">3.1 Registro de Venta</h3>
-        <p>Cómo registrar una venta en el sistema.</p>
-
-        <h3 id="anulacion-venta">3.2 Anulación de Venta</h3>
-        <p>Procedimiento para anular una venta.</p>
+        <p>
+            Cómo registrar una venta en el sistema:
+            <ol>
+                <li>Una vez iniciada la sesión abra la barra lateral pulsando el botón del menú de la esquina superior derecha.</li>
+                <li>Despliegue la pestaña "Ventas" y seleccione la opción "Emision de Ventas" .</li>
+                <li>Busque el producto a vender ingresando el nombre en el cuadro de busqueda.</li>
+                <li>Seleccione el producto haciendole un solo click.</li>
+                <li>Ingrese la cantidad a vender en el campo "Cantidad".</li>
+                <li>Una vez seleccionado el producto e ingresada la cantidad, presione el botón "Ingresar a la lista".</li>
+                <li>Puede consultar la lista de productos preparados para la venta en la sección derecha de la pantalla.</li>
+                <li>Opcionalmente puede elegir el método de pago, en la esquina inferíor decha de la pantalla.</li>
+                <li>Una vez ingresado todos los productos, pulse el botón "Finalizar" para cerrar la factura.</li>
+                <li>En algunos casos será necesaria la identificación del cliente para la concreción de la factura. Esta restricción se aplica unicamente superados ciertos momentos, por defecto, $30000.</li>
+            </ol>
+        </p>
 
         <h3 id="consulta-stock">3.3 Consulta de Stock</h3>
-        <p>Cómo consultar el stock disponible.</p>
+        <p>
+            Cómo consultar el stock disponible. (Administrador)
+            <ol>
+                <li>Una vez iniciada la sesión abra la barra lateral pulsando el botón del menú de la esquina superior derecha.</li>
+                <li>Despliegue la pestaña "Ventas" y seleccione la opción "Control de Stock" .</li>
+                <li>Seleccione el producto a visualizar con el selector de productos en el cuadro en la parte superior central de la pantalla.</li>
+                <li>Una vez encontrado el producto, confirme su selección presionando el "Icono de la Lupa".</li>
+                <li>En la pantalla estarán listados los distintos lotes del producto.</li>
+                <li>Por defecto se muestran los registros que poseen algún stock, para ver registros más viejos, use el selector de filtro y cambielo a "Ver todos".</li>
+                <li>En esta pantalla puede ingresar nuevos lotes y modificar los existentes</li>
+            </ol>
+        </p>
 
         <h2 id="administrador">4. Funcionalidades del Administrador</h2>
 
@@ -135,17 +157,41 @@
         <p>Cómo realizar compras a proveedores.</p>
 
         <h3 id="gestion-inventario">4.2 Gestión de Inventario</h3>
-        <p>Cómo gestionar el inventario de productos.</p>
+            <p>Cómo gestionar el inventario de productos:</p>
+            <ol>
+                <li>Accede a la sección "Inventario" desde el menú de administración.</li>
+                <li>Selecciona la opción "Gestión de Productos" para ver la lista de productos actuales.</li>
+                <li>Para agregar un nuevo producto, haz clic en "Añadir Producto", llena los datos requeridos (nombre, categoría, precio, cantidad) y guarda los cambios.</li>
+                <li>Para actualizar el stock, selecciona el producto en la lista, edita la cantidad o cualquier otro dato necesario y guarda.</li>
+                <li>Usa el filtro de búsqueda para localizar productos específicos o por categoría.</li>
+                <li>Para eliminar un producto obsoleto, selecciona el ítem y presiona "Eliminar". Nota: solo puede hacerse si el producto no tiene ventas activas.</li>
+            </ol>
 
-        <h3 id="informe-ventas">4.3 Generación de Informe de Ventas</h3>
-        <p>Cómo generar informes de ventas.</p>
+            <h2 id="soporte">5. Mantenimiento</h2>
+            <p>Sección de Mantenimiento y Resolución de Problemas Comunes:</p>
+            <ol>
+                <li><strong>Actualización del Sistema:</strong> Realiza actualizaciones periódicas para asegurar compatibilidad y estabilidad. Accede al menú de configuración y selecciona "Actualizar".</li>
+                <li><strong>Revisión de Conexión a la Base de Datos:</strong> Si encuentras problemas de acceso o lentitud, verifica la conexión con la base de datos desde el panel de configuración.</li>
+                <li><strong>Respaldo de Datos:</strong> Programa copias de seguridad automáticas cada semana para proteger los datos. Dirígete a "Configuración > Copias de Seguridad" y selecciona la frecuencia deseada.</li>
+                <li><strong>Contacto de Soporte:</strong> Para problemas críticos, contacta a soporte técnico a través de la opción "Soporte" en el menú de ayuda, proporcionando detalles del problema para recibir asistencia.</li>
+            </ol>
 
-        <h2 id="soporte">5. Mantenimiento</h2>
-        <p>Podremos realizar modificaciones de Paises,Provincia y Localidad.</p>
-        <p>Tendremos que seleccinar la opcion deseada y seleccionar o escribir</p>
-
-        <h2 id="faq">6. Preguntas Frecuentes (FAQ)</h2>
-        <p>Respuestas a las preguntas más comunes sobre el sistema.</p>
+            <h2 id="faq">6. Preguntas Frecuentes (FAQ)</h2>
+            <p>Respuestas a las preguntas más comunes sobre el sistema:</p>
+            <ol>
+                <li><strong>¿Qué hago si olvido mi contraseña?</strong>
+                    <p>Dirígete a la pantalla de inicio de sesión y selecciona "¿Olvidó su contraseña?". Responde la pregunta secreta o contacta al administrador para asistencia.</p>
+                </li>
+                <li><strong>¿Cómo puedo corregir una venta registrada incorrectamente?</strong>
+                    <p>Un administrador puede realizar una anulación desde la opción "Historial de Ventas" y seleccionando "Anular". Nota: esto solo está disponible el mismo día de la venta.</p>
+                </li>
+                <li><strong>¿Puedo exportar los datos de ventas a Excel o PDF?</strong>
+                    <p>Sí, en la sección de informes, selecciona el tipo de reporte y el formato de exportación. El sistema generará un archivo que puedes descargar.</p>
+                </li>
+                <li><strong>¿Qué sucede si el sistema no registra una venta?</strong>
+                    <p>Revisa la conexión a la red o intenta reiniciar el sistema. Si persiste, contacta con el soporte para verificar posibles errores en el servidor.</p>
+                </li>
+            </ol>
     </div>
 </body>
 </html>
