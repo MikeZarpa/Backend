@@ -148,6 +148,10 @@
             $habilitado = !($this -> habilitado) ? 1 : 0;
             $consultaActualizacion = "UPDATE usuarios SET habilitado=$habilitado WHERE id_usuario = $id_usuario;";
             Conexion::nonQuery($consultaActualizacion);
+
+            if($habilitado == 0) {
+                Token::deshabilitar_tokens($this -> id_usuario);
+            }
         }
 
         public function actualizar(){
